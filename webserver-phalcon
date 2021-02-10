@@ -1,0 +1,32 @@
+#vi Dockerfile
+FROM ubuntu:20.04
+MAINTAINER developer@bigm.it
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update
+RUN apt-get upgrade -y
+# Install ubuntu libraries
+RUN apt-get install apache2 mariadb-server nano git zip unzip php7.4 php-pear php7.4-curl php7.4-json php7.4-mysql php7.4-mbstring php7.4-dev php7.4-psr curl wget nodejs npm -y
+# 8th Febrary 2020 - Ubuntu Phalcon library is failing with error: zend_mm_heap corrupted
+#RUN curl -s https://packagecloud.io/install/repositories/phalcon/stable/script.deb.sh | sudo bash
+#RUN apt-get update
+#RUN apt-get install php7.4-phalcon
+# Fallback building Phalcon from source
+RUN pecl install phalcon
+# Get composer and install globally
+RUN curl -s http://getcomposer.org/installer | php
+RUN mv composer.phar /usr/local/bin/composer
+# Set up apache2 configuration
+COPY ./000-default.conf /etc/apache2/sites-available/000-default.conf
+# Add Phalcon library to apache2 configuration
+COPY ./phalcon.ini /etc/php/7.4/mods-available/phalcon.ini
+RUN ln -s /etc/php/7.4/mods-available/phalcon.ini /etc/php/7.4/apache2/conf.d/50-phalcon.ini
+RUN ln -s /etc/php/7.4/mods-available/phalcon.ini /etc/php/7.4/cli/conf.d/50-phalcon.ini
+# Enable apache2 rewrite
+RUN a2enmod rewrite
+# Install Phalcon devtools globally
+RUN composer global require phalcon/devtools
+RUN ln -s /root/.config/composer/vendor/phalcon/devtools/phalcon /usr/bin/phalcon
+
+EXPOSE 80
+EXPOSE 3306
+CMD ["apachectl", "-D", "FOREGROUND"]
