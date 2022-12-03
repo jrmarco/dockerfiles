@@ -1,0 +1,19 @@
+#vi Dockerfile
+FROM ubuntu:22.04
+MAINTAINER developer@bigm.it
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update
+RUN apt-get upgrade -y
+# Install libraries
+RUN apt-get install apache2 mariadb-server nano git zip unzip php php-pear php8.1-curl php8.1 php8.1-mysql php8.1-mbstring php8.1-dev php8.1-psr curl wget nodejs npm php-xdebug -y 
+# Get composer and install globally
+RUN curl -s http://getcomposer.org/installer | php
+RUN mv composer.phar /usr/local/bin/composer
+# Set up apache2 configuration
+COPY ./000-default.conf /etc/apache2/sites-available/000-default.conf
+# Enable apache2 rewrite
+RUN a2enmod rewrite
+
+EXPOSE 80
+EXPOSE 3306
+CMD ["apachectl", "-D", "FOREGROUND"]
