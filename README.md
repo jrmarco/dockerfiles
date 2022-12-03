@@ -5,9 +5,11 @@ This repository contains a list of ready-to-use dockerfile image to build docker
 Comes with Apache2, MariaDb, PHP 7.4 ( minimal libraries ), cUrl, wget, nodejs, npm, nano, git and composer.
 * webserver-phalcon: Ubuntu 20-04 container
 Comes with Apache2, MariaDb, PHP 7.4, cUrl, wget, nodejs, npm, nano, git, composer, Phalcon framework and Phalcon DevTools
+* webdev-php8-2204: Ubuntu 22-04 container
+Comes with Apache2, MariaDb, PHP 8.1, xdebug, cUrl, wget, nodejs, npm, nano, git, composer
 
-Last update 10th February 2021  
-**PLEASE NOTICE: all this images are meant to be used only as dev-environment**
+Last update 3rd December 2022
+**PLEASE NOTE: all this images are meant to be used only as dev-environment**
 
 ## Other files in this repo:
 * 000-default.conf: default apache2 virtualhost directory settings.  
